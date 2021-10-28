@@ -17,7 +17,7 @@ import {
   FEES_DENOMINATOR,
   ChainId,
 } from '../constants'
-import { sqrt, parseBigintIsh } from '../utils'
+import { sqrt, parseBigintIsh, create2ContractAddressToGodwokenShortAddress } from '../utils'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
 import { Token } from './token'
 
@@ -35,12 +35,14 @@ export class Pair {
         ...PAIR_ADDRESS_CACHE,
         [tokens[0].address]: {
           ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
-          [tokens[1].address]: getCreate2Address(
-            FACTORY_ADDRESS,
-            keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
-            INIT_CODE_HASH
-          ),
-        },
+          [tokens[1].address]: create2ContractAddressToGodwokenShortAddress(
+            getCreate2Address(
+              FACTORY_ADDRESS,
+              keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
+              INIT_CODE_HASH
+            )
+          )
+        }
       }
     }
 
@@ -55,8 +57,9 @@ export class Pair {
       tokenAmounts[0].token.chainId,
       Pair.getAddress(tokenAmounts[0].token, tokenAmounts[1].token),
       18,
-      'Cake-LP',
-      'Pancake LPs'
+      `${tokenAmounts[0].token.symbol ?? tokenAmounts[0].token.address}-${tokenAmounts[1].token.symbol ??
+        tokenAmounts[1].token.address}-LP`,
+      'YokaiSwap LP'
     )
     this.tokenAmounts = tokenAmounts as [TokenAmount, TokenAmount]
   }

@@ -4,8 +4,9 @@ import JSBI from 'jsbi'
 export type BigintIsh = JSBI | bigint | string
 
 export enum ChainId {
-  MAINNET = 56,
-  TESTNET = 97
+  GW_DEVNET = 1024777,
+  GW_TESTNET = 71393,
+  GW_MAINNET = 999999 // TODO: use real chain id
 }
 
 export enum TradeType {
@@ -19,9 +20,14 @@ export enum Rounding {
   ROUND_UP
 }
 
-export const FACTORY_ADDRESS = '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73'
+export const FACTORY_ADDRESS =
+  Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_MAINNET
+    ? '0x9816009ADcefC3b510E7BD92300b87d7991C462e' // TODO: use mainnet address
+    : Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_TESTNET
+    ? '0x9816009ADcefC3b510E7BD92300b87d7991C462e'
+    : '0x3E08BC5320652090Eac8FAB2acE5fA38fdd3bF22' // godwoken devnet
 
-export const INIT_CODE_HASH = '0x00fb7f630766e6a796048ea87d01acd3068e8ff67d078148a3fa3f4a84f69bd5'
+export const INIT_CODE_HASH = '0x63a0795e9ce9291273519bb2edcd3edd1043cfa10fea99808b19f125f7c743a4'
 
 export const MINIMUM_LIQUIDITY = JSBI.BigInt(1000)
 

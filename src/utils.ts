@@ -1,7 +1,8 @@
 import invariant from 'tiny-invariant'
 import warning from 'tiny-warning'
 import JSBI from 'jsbi'
-import { getAddress } from '@ethersproject/address'
+import { getAddress, isAddress } from '@ethersproject/address'
+import { Script, utils } from '@ckb-lumos/base'
 
 import { BigintIsh, ZERO, ONE, TWO, THREE, SolidityType, SOLIDITY_TYPE_MAXIMA } from './constants'
 
@@ -79,4 +80,28 @@ export function sortedInsert<T>(items: T[], add: T, maxSize: number, comparator:
     items.splice(lo, 0, add)
     return isFull ? items.pop()! : null
   }
+}
+
+export function create2ContractAddressToGodwokenShortAddress(ethAddress: string): string {
+  if (!isAddress(ethAddress)) {
+    throw new Error('eth address format error!')
+  }
+
+  const creatorAccountId = Number(process.env.REACT_APP_GW_CONTRACT_CREATOR_ACCOUNT_ID!)
+  const creatorAccountIdLe = u32ToLittleEndian(creatorAccountId)
+
+  const layer2Lock: Script = {
+    code_hash: process.env.REACT_APP_GW_CONTRACT_CODE_HASH!,
+    hash_type: 'type',
+    args: process.env.REACT_APP_GW_ROLLUP_TYPE_HASH! + creatorAccountIdLe.slice(2) + ethAddress.slice(2).toLowerCase()
+  }
+  const scriptHash = utils.computeScriptHash(layer2Lock)
+  const shortAddress = scriptHash.slice(0, 42)
+  return getAddress(shortAddress)
+}
+
+function u32ToLittleEndian(num: number): string {
+  const buf = Buffer.alloc(4)
+  buf.writeUInt32LE(num)
+  return `0x${buf.toString('hex')}`
 }

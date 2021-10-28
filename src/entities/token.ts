@@ -65,21 +65,26 @@ export function currencyEquals(currencyA: Currency, currencyB: Currency): boolea
   }
 }
 
-export const WETH = {
-  [ChainId.MAINNET]: new Token(
-    ChainId.MAINNET,
-    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    18,
-    'WBNB',
-    'Wrapped BNB',
-    'https://www.binance.org'
+export const WRAPPED_NATIVE = {
+  [ChainId.GW_MAINNET]: new Token(
+    ChainId.GW_DEVNET,
+    '0x7417e92923952a3d65bffAb3f34D2Bd77497c890', // TODO: use mainnet address
+    8,
+    'WCKB',
+    'Wrapped CKB'
   ),
-  [ChainId.TESTNET]: new Token(
-    ChainId.TESTNET,
-    '0xaE8E19eFB41e7b96815649A6a60785e1fbA84C1e',
-    18,
-    'WBNB',
-    'Wrapped BNB',
-    'https://www.binance.org'
+  [ChainId.GW_TESTNET]: new Token(
+    ChainId.GW_TESTNET,
+    '0x7417e92923952a3d65bffAb3f34D2Bd77497c890',
+    8,
+    'WCKB',
+    'Wrapped CKB'
+  ),
+  [ChainId.GW_DEVNET]: new Token(
+    ChainId.GW_DEVNET,
+    '0x41b81Bc77E6426bD15cd18307DC20e7181676B94',
+    8,
+    'WCKB',
+    'Wrapped CKB'
   )
 }

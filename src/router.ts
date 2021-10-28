@@ -1,7 +1,7 @@
 import { TradeType } from './constants'
 import invariant from 'tiny-invariant'
 import { validateAndParseAddress } from './utils'
-import { CurrencyAmount, ETHER, Percent, Trade } from './entities'
+import { CurrencyAmount, NATIVE, Percent, Trade } from './entities'
 
 /**
  * Options for producing the arguments to send call to the router.
@@ -37,11 +37,11 @@ export interface TradeOptionsDeadline extends Omit<TradeOptions, 'ttl'> {
 }
 
 /**
- * The parameters to use in the call to the Pancake Router to execute a trade.
+ * The parameters to use in the call to the Yokai Router to execute a trade.
  */
 export interface SwapParameters {
   /**
-   * The method to call on the Pancake Router.
+   * The method to call on the Yokai Router.
    */
   methodName: string
   /**
@@ -61,7 +61,7 @@ function toHex(currencyAmount: CurrencyAmount) {
 const ZERO_HEX = '0x0'
 
 /**
- * Represents the Pancake Router, and has static methods for helping execute trades.
+ * Represents the Yokai Router, and has static methods for helping execute trades.
  */
 export abstract class Router {
   /**
@@ -74,16 +74,16 @@ export abstract class Router {
    * @param options options for the call parameters
    */
   public static swapCallParameters(trade: Trade, options: TradeOptions | TradeOptionsDeadline): SwapParameters {
-    const etherIn = trade.inputAmount.currency === ETHER
-    const etherOut = trade.outputAmount.currency === ETHER
-    // the router does not support both ether in and out
-    invariant(!(etherIn && etherOut), 'ETHER_IN_OUT')
+    const nativeIn = trade.inputAmount.currency === NATIVE
+    const nativeOut = trade.outputAmount.currency === NATIVE
+    // the router does not support both `NATIVE_TOKEN_SYMBOL` in and out
+    invariant(!(nativeIn && nativeOut), 'NATIVE_TOKEN_IN_OUT')
     invariant(!('ttl' in options) || options.ttl > 0, 'TTL')
 
     const to: string = validateAndParseAddress(options.recipient)
     const amountIn: string = toHex(trade.maximumAmountIn(options.allowedSlippage))
     const amountOut: string = toHex(trade.minimumAmountOut(options.allowedSlippage))
-    const path: string[] = trade.route.path.map((token) => token.address)
+    const path: string[] = trade.route.path.map(token => token.address)
     const deadline =
       'ttl' in options
         ? `0x${(Math.floor(new Date().getTime() / 1000) + options.ttl).toString(16)}`
@@ -96,12 +96,12 @@ export abstract class Router {
     let value: string
     switch (trade.tradeType) {
       case TradeType.EXACT_INPUT:
-        if (etherIn) {
+        if (nativeIn) {
           methodName = useFeeOnTransfer ? 'swapExactETHForTokensSupportingFeeOnTransferTokens' : 'swapExactETHForTokens'
           // (uint amountOutMin, address[] calldata path, address to, uint deadline)
           args = [amountOut, path, to, deadline]
           value = amountIn
-        } else if (etherOut) {
+        } else if (nativeOut) {
           methodName = useFeeOnTransfer ? 'swapExactTokensForETHSupportingFeeOnTransferTokens' : 'swapExactTokensForETH'
           // (uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
           args = [amountIn, amountOut, path, to, deadline]
@@ -117,12 +117,12 @@ export abstract class Router {
         break
       case TradeType.EXACT_OUTPUT:
         invariant(!useFeeOnTransfer, 'EXACT_OUT_FOT')
-        if (etherIn) {
+        if (nativeIn) {
           methodName = 'swapETHForExactTokens'
           // (uint amountOut, address[] calldata path, address to, uint deadline)
           args = [amountOut, path, to, deadline]
           value = amountIn
-        } else if (etherOut) {
+        } else if (nativeOut) {
           methodName = 'swapTokensForExactETH'
           // (uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
           args = [amountOut, amountIn, path, to, deadline]
@@ -138,7 +138,7 @@ export abstract class Router {
     return {
       methodName,
       args,
-      value,
+      value
     }
   }
 }
