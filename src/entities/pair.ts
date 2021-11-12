@@ -15,7 +15,7 @@ import {
   FIVE,
   FEES_NUMERATOR,
   FEES_DENOMINATOR,
-  ChainId,
+  ChainId
 } from '../constants'
 import { sqrt, parseBigintIsh, create2ContractAddressToGodwokenShortAddress } from '../utils'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
@@ -174,10 +174,22 @@ export class Pair {
       ? [tokenAmountA, tokenAmountB]
       : [tokenAmountB, tokenAmountA]
     invariant(tokenAmounts[0].token.equals(this.token0) && tokenAmounts[1].token.equals(this.token1), 'TOKEN')
+    const token0Decimals = this.token0.decimals
+    const token1Decimals = this.token1.decimals
+    invariant(token0Decimals <= 18, 'token 0 decimals')
+    invariant(token1Decimals <= 18, 'token 1 decimals')
 
     let liquidity: JSBI
     if (JSBI.equal(totalSupply.raw, ZERO)) {
-      liquidity = JSBI.subtract(sqrt(JSBI.multiply(tokenAmounts[0].raw, tokenAmounts[1].raw)), MINIMUM_LIQUIDITY)
+      liquidity = JSBI.subtract(
+        sqrt(
+          JSBI.multiply(
+            JSBI.multiply(tokenAmounts[0].raw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18 - token0Decimals))),
+            JSBI.multiply(tokenAmounts[1].raw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18 - token1Decimals)))
+          )
+        ),
+        MINIMUM_LIQUIDITY
+      )
     } else {
       const amount0 = JSBI.divide(JSBI.multiply(tokenAmounts[0].raw, totalSupply.raw), this.reserve0.raw)
       const amount1 = JSBI.divide(JSBI.multiply(tokenAmounts[1].raw, totalSupply.raw), this.reserve1.raw)
