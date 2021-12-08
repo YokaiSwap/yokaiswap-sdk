@@ -67,8 +67,8 @@ export function currencyEquals(currencyA: Currency, currencyB: Currency): boolea
 
 export const WRAPPED_NATIVE = {
   [ChainId.GW_MAINNET]: new Token(
-    ChainId.GW_DEVNET,
-    '0x7417e92923952a3d65bffAb3f34D2Bd77497c890', // TODO: use mainnet address
+    ChainId.GW_MAINNET,
+    '0xE934f463d026d97F6CE0A10215D0ac4224f0a930',
     8,
     'WCKB',
     'Wrapped CKB'
