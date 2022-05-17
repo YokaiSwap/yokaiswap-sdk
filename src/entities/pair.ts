@@ -15,7 +15,7 @@ import {
   FIVE,
   FEES_NUMERATOR,
   FEES_DENOMINATOR,
-  ChainId,
+  ChainId
 } from '../constants'
 import { sqrt, parseBigintIsh, create2ContractAddressToGodwokenShortAddress } from '../utils'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
@@ -27,21 +27,22 @@ export class Pair {
   public readonly liquidityToken: Token
   private readonly tokenAmounts: [TokenAmount, TokenAmount]
 
-  public static getAddress(tokenA: Token, tokenB: Token): string {
+  public static getAddress(tokenA: Token, tokenB: Token, useGodwokenAddress = false): string {
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
 
     if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address] === undefined) {
+      const create2Address = getCreate2Address(
+        FACTORY_ADDRESS,
+        keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
+        INIT_CODE_HASH
+      )
       PAIR_ADDRESS_CACHE = {
         ...PAIR_ADDRESS_CACHE,
         [tokens[0].address]: {
           ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
-          [tokens[1].address]: create2ContractAddressToGodwokenShortAddress(
-            getCreate2Address(
-              FACTORY_ADDRESS,
-              keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]),
-              INIT_CODE_HASH
-            )
-          )
+          [tokens[1].address]: useGodwokenAddress
+            ? create2ContractAddressToGodwokenShortAddress(create2Address)
+            : create2Address
         }
       }
     }

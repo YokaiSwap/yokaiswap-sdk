@@ -75,8 +75,8 @@ export const WRAPPED_NATIVE = {
   ),
   [ChainId.GW_TESTNET]: new Token(
     ChainId.GW_TESTNET,
-    '0x7417e92923952a3d65bffAb3f34D2Bd77497c890',
-    8,
+    '0xD3a77b082cF44a31B31768148539314Ac802c96C',
+    18,
     'WCKB',
     'Wrapped CKB'
   ),

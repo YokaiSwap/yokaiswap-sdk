@@ -16,7 +16,7 @@ export class Currency {
   /**
    * The only instance of the base class `Currency`.
    */
-  public static readonly NATIVE: Currency = new Currency(8, 'CKB', 'Nervos Network')
+  public static readonly NATIVE: Currency = new Currency(18, 'CKB', 'Nervos Network')
 
   /**
    * Constructs an instance of the base class `Currency`. The only instance of the base class `Currency` is `Currency.NATIVE`.

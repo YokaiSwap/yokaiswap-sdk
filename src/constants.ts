@@ -5,7 +5,7 @@ export type BigintIsh = JSBI | bigint | string
 
 export enum ChainId {
   GW_DEVNET = 1024777,
-  GW_TESTNET = 71393,
+  GW_TESTNET = 71401,
   GW_MAINNET = 71394
 }
 
@@ -24,7 +24,7 @@ export const FACTORY_ADDRESS =
   Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_MAINNET
     ? '0x5EF0d2d41a5F3D5a083Bc776F94282667C27b794'
     : Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_TESTNET
-    ? '0x9816009ADcefC3b510E7BD92300b87d7991C462e'
+    ? '0x1c846CeE00f22dDC431d5E4a4e3A39951b9699Fd'
     : '0x3E08BC5320652090Eac8FAB2acE5fA38fdd3bF22' // godwoken devnet
 
 export const INIT_CODE_HASH = '0xabf2eb6b63bf7a67779f05d4ebe5d730e20cfa617fca657d7b6e6434de6051bf'

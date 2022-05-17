@@ -1,7 +1,7 @@
 {
   "name": "@yokaiswap/sdk",
   "license": "MIT",
-  "version": "2.4.0",
+  "version": "2.4.3",
   "description": "🛠 An SDK for building applications on top of YokaiSwap.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -23,7 +23,7 @@
     "start": "tsdx watch",
     "test": "tsdx test",
     "prepublishOnly": "tsdx build",
-    "postinstall": "patch-package"
+    "privatePostinstall": "patch-package"
   },
   "dependencies": {
     "@pancakeswap-libs/pancake-swap-core": "^0.1.0",
@@ -35,12 +35,12 @@
     "toformat": "^2.0.0"
   },
   "peerDependencies": {
-    "@ckb-lumos/base": "^0.16.0",
-    "@ethersproject/address": "^5.0.0-beta",
-    "@ethersproject/contracts": "^5.0.0-beta",
-    "@ethersproject/networks": "^5.0.0-beta",
-    "@ethersproject/providers": "^5.0.0-beta",
-    "@ethersproject/solidity": "^5.0.0-beta"
+    "@ckb-lumos/base": "^0.18.0-rc1",
+    "@ethersproject/address": "^5.0.2",
+    "@ethersproject/contracts": "^5.0.2",
+    "@ethersproject/networks": "^5.0.2",
+    "@ethersproject/providers": "^5.0.5",
+    "@ethersproject/solidity": "^5.0.2"
   },
   "devDependencies": {
     "@ckb-lumos/base": "^0.18.0-rc1",
