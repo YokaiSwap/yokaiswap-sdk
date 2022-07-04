@@ -22,7 +22,7 @@ export enum Rounding {
 
 export const FACTORY_ADDRESS =
   Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_MAINNET
-    ? '0x5EF0d2d41a5F3D5a083Bc776F94282667C27b794'
+    ? '0x7ec2d60880d83614dd4013D39CF273107f30624c'
     : Number(process.env.REACT_APP_CHAIN_ID) === ChainId.GW_TESTNET
     ? '0x1c846CeE00f22dDC431d5E4a4e3A39951b9699Fd'
     : '0x3E08BC5320652090Eac8FAB2acE5fA38fdd3bF22' // godwoken devnet
